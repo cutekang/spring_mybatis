@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.Random;
 
 @SpringBootTest
@@ -138,4 +140,19 @@ public class PostTest {
                 .stream().map(PostVO::toString).forEach(log::info);
     }
 
+    @Test
+    public void selectWithParamsTest(){
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("order", "popular");
+
+//        if(params.get("cursor") == null){
+//            params.put("cursor", 1);
+//        }
+
+        params.put("cursor", 1);
+        params.put("direction", "desc");
+
+        postMapper.selectAllWithParams(params)
+                .stream().map(PostVO::toString).forEach(log::info);
+    }
 }

@@ -35,14 +35,41 @@
     <select id="selectAllWithOrder" parameterType="String" resultType="postVO">
         SELECT ID, POST_TITLE, POST_CONTENT, POST_READ_COUNT, MEMBER_ID
         FROM TBL_POST
-        ORDER BY POST_READ_COUNT
+        ORDER BY
         <choose>
-            <when test="order.equals('asc'.toString())">
+            <when test="order.equals('popular'.toString())">
+                POST_READ_COUNT
+            </when>
+            <otherwise>
+                ID
+            </otherwise>
+        </choose>
+        <if test="order != asc">
+            DESC
+        </if>
+    </select>
+
+    <select id="selectAllWithParams" parameterType="Map" resultType="postVO">
+        SELECT ID, POST_TITLE, POST_CONTENT, POST_READ_COUNT, MEMBER_ID
+        FROM TBL_POST
+        ORDER BY
+        <choose>
+            <when test="order.equals('popular'.toString())">
+                POST_READ_COUNT
+            </when>
+            <otherwise>
+                ID
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="direction != null and direction.equals('asc')">
                 ASC
             </when>
             <otherwise>
                 DESC
             </otherwise>
         </choose>
+        OFFSET (${cursor} - 1) * 5 ROWS
+        FETCH NEXT 5 ROWS ONLY
     </select>
 </mapper>
